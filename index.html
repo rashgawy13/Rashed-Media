@@ -80,6 +80,22 @@
             background-color: #219a52;
         }
 
+        .copy-btn {
+            padding: 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
+
         .message-container {
             position: fixed;
             top: 0;
@@ -224,11 +240,39 @@
     function shareVideoLink(videoFilename) {
         const modal = document.getElementById('shareModal');
         const linkInput = document.getElementById('shareLinkInput');
+        const copyBtn = document.getElementById('copyBtn');
 
-        const videoUrl = `https://yourusername.github.io/your-repo-name/videos/${videoFilename}`;
+        // Generate a unique identifier for each video
+        const uniqueId = generateUniqueId();
+        const videoUrl = `https://yourusername.github.io/your-repo-name/videos/${videoFilename}?id=${uniqueId}`;
         linkInput.value = videoUrl;
 
+        // Show the modal
         modal.style.display = 'flex';
+
+        // Event listener for the "Copy" button
+        copyBtn.onclick = function () {
+            copyToClipboard(linkInput);
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy';
+            }, 2000); // Reset the button text after 2 seconds
+        };
+    }
+
+    function generateUniqueId() {
+        // Function to generate a unique identifier
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    function copyToClipboard(element) {
+        // Function to copy text to clipboard
+        element.select();
+        document.execCommand('copy');
     }
 
     function closeModal() {
@@ -243,6 +287,7 @@
         <span onclick="closeModal()" class="close-btn">&times;</span>
         <p>Share this link with others:</p>
         <input type="text" id="shareLinkInput" readonly>
+        <button class="copy-btn" id="copyBtn">Copy</button>
     </div>
 </div>
 
