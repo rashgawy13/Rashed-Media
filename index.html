@@ -50,6 +50,7 @@
         }
 
         .video-item {
+            position: relative;
             max-width: 300px;
         }
 
@@ -58,7 +59,7 @@
             border-radius: 5px;
         }
 
-        .share-btn {
+        .share-btn, .delete-btn {
             display: block;
             padding: 8px 16px;
             margin-top: 10px;
@@ -71,44 +72,68 @@
             text-align: center;
         }
 
-        .share-btn:hover {
+        .share-btn:hover, .delete-btn:hover {
             background-color: #2980b9;
         }
 
-        .share-link {
-            display: none;
-            padding: 8px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 10px;
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
         }
 
-        .share-link.show {
+        .share-all-btn {
             display: block;
-        }
-
-        .share-link input {
-            width: calc(100% - 40px);
-            border: none;
-            outline: none;
-            padding: 5px;
-            margin-right: 5px;
-            float: left;
-        }
-
-        .copy-link-btn {
-            background-color: #3498db;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #27ae60;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            padding: 6px 12px;
-            float: left;
+            transition: background-color 0.3s ease;
+            text-align: center;
         }
 
-        .copy-link-btn:hover {
-            background-color: #2980b9;
+        .share-all-btn:hover {
+            background-color: #219a52;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .close-btn:hover {
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -118,6 +143,7 @@
         <input type="file" id="videoInput" accept="video/*" onchange="handleFileUpload(event)" multiple>
         <label for="videoInput" class="upload-btn">Upload Video</label>
         <div class="video-list" id="videoList"></div>
+        <button class="share-all-btn" onclick="shareAllVideos()">Share All</button>
     </div>
 
     <!-- Modal for sharing video link -->
@@ -131,6 +157,8 @@
     </div>
 
     <script>
+        const sharedLinks = [];
+
         // JavaScript code for handling file uploads
         function handleFileUpload(event) {
             const files = event.target.files;
@@ -138,6 +166,7 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const videoURL = URL.createObjectURL(file);
+                sharedLinks.push(videoURL);
 
                 const videoItem = document.createElement('div');
                 videoItem.classList.add('video-item');
@@ -153,16 +182,16 @@
                     shareVideoLink(videoURL);
                 };
 
-                const shareLinkContainer = document.createElement('div');
-                shareLinkContainer.classList.add('share-link');
-                shareLinkContainer.innerHTML = `
-                    <input type="text" value="${videoURL}">
-                    <button class="copy-link-btn" onclick="copyLinkInList(this)">Copy Link</button>
-                `;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = function () {
+                    deleteVideo(videoItem, videoURL);
+                };
 
                 videoItem.appendChild(video);
                 videoItem.appendChild(shareBtn);
-                videoItem.appendChild(shareLinkContainer);
+                videoItem.appendChild(deleteBtn);
                 document.getElementById('videoList').appendChild(videoItem);
 
                 checkForDuplicates(file); // Check for duplicates
@@ -203,16 +232,41 @@
             alert('Link copied to clipboard!');
         }
 
-        function copyLinkInList(btn) {
-            const input = btn.previousElementSibling;
-            copyToClipboard(input);
-            alert('Link copied to clipboard!');
-        }
-
         function checkForDuplicates(file) {
             // Implementation of duplicate detection logic (compare file size or hash)
             // Dummy implementation for demonstration
             console.log('Checking for duplicates:', file.name);
+        }
+
+        function deleteVideo(videoItem, videoURL) {
+            videoItem.remove();
+            const index = sharedLinks.indexOf(videoURL);
+            if (index !== -1) {
+                sharedLinks.splice(index, 1);
+            }
+        }
+
+        function shareAllVideos() {
+            const allVideosLink = sharedLinks.join('\n');
+            if (allVideosLink) {
+                const modal = document.getElementById('shareModal');
+                const linkInput = document.getElementById('shareLinkInput');
+                const copyBtn = document.getElementById('copyBtn');
+
+                linkInput.value = allVideosLink;
+
+                modal.style.display = 'flex';
+
+                copyBtn.onclick = function () {
+                    copyToClipboard(linkInput);
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy Link';
+                    }, 2000);
+                };
+            } else {
+                alert('No videos to share.');
+            }
         }
     </script>
 </body>
