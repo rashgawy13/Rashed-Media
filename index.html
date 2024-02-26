@@ -50,7 +50,6 @@
         }
 
         .video-item {
-            position: relative;
             max-width: 300px;
         }
 
@@ -59,7 +58,7 @@
             border-radius: 5px;
         }
 
-        .share-btn, .delete-btn {
+        .share-btn {
             display: block;
             padding: 8px 16px;
             margin-top: 10px;
@@ -72,51 +71,44 @@
             text-align: center;
         }
 
-        .share-btn:hover, .delete-btn:hover {
+        .share-btn:hover {
             background-color: #2980b9;
         }
 
-        .delete-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-
-        /* Modal styles */
-        .modal {
+        .share-link {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
         }
 
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 400px;
-            text-align: center;
+        .share-link.show {
+            display: block;
         }
 
-        .close-btn {
-            background-color: #e74c3c;
+        .share-link input {
+            width: calc(100% - 40px);
+            border: none;
+            outline: none;
+            padding: 5px;
+            margin-right: 5px;
+            float: left;
+        }
+
+        .copy-link-btn {
+            background-color: #3498db;
             color: #fff;
-            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease-in-out;
+            padding: 6px 12px;
+            float: left;
         }
 
-        .close-btn:hover {
-            background-color: #c0392b;
+        .copy-link-btn:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
@@ -161,17 +153,19 @@
                     shareVideoLink(videoURL);
                 };
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('delete-btn');
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.onclick = function () {
-                    deleteVideo(videoItem);
-                };
+                const shareLinkContainer = document.createElement('div');
+                shareLinkContainer.classList.add('share-link');
+                shareLinkContainer.innerHTML = `
+                    <input type="text" value="${videoURL}">
+                    <button class="copy-link-btn" onclick="copyLinkInList(this)">Copy Link</button>
+                `;
 
                 videoItem.appendChild(video);
                 videoItem.appendChild(shareBtn);
-                videoItem.appendChild(deleteBtn);
+                videoItem.appendChild(shareLinkContainer);
                 document.getElementById('videoList').appendChild(videoItem);
+
+                checkForDuplicates(file); // Check for duplicates
             }
         }
 
@@ -209,10 +203,16 @@
             alert('Link copied to clipboard!');
         }
 
-        function deleteVideo(videoItem) {
-            videoItem.remove();
-            // Implement logic to delete the video from storage or database
-            // You may need to identify the video to delete (e.g., by file name or ID)
+        function copyLinkInList(btn) {
+            const input = btn.previousElementSibling;
+            copyToClipboard(input);
+            alert('Link copied to clipboard!');
+        }
+
+        function checkForDuplicates(file) {
+            // Implementation of duplicate detection logic (compare file size or hash)
+            // Dummy implementation for demonstration
+            console.log('Checking for duplicates:', file.name);
         }
     </script>
 </body>
