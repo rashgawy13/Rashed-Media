@@ -172,8 +172,6 @@
                 videoItem.appendChild(shareBtn);
                 videoItem.appendChild(deleteBtn);
                 document.getElementById('videoList').appendChild(videoItem);
-
-                checkForDuplicates(file); // Check for duplicates
             }
         }
 
@@ -209,12 +207,6 @@
             const linkInput = document.getElementById('shareLinkInput');
             copyToClipboard(linkInput);
             alert('Link copied to clipboard!');
-        }
-
-        function checkForDuplicates(file) {
-            // Implementation of duplicate detection logic (compare file size or hash)
-            // Dummy implementation for demonstration
-            console.log('Checking for duplicates:', file.name);
         }
 
         function deleteVideo(videoItem) {
