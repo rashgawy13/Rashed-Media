@@ -170,11 +170,30 @@
             background-color: #c0392b;
         }
 
-        /* Add responsiveness */
-        @media only screen and (max-width: 600px) {
-            .media-wrapper {
-                max-width: 100%;
-            }
+        /* Social media sharing styles */
+        .social-share {
+            margin-top: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 8px 12px;
+            color: #fff;
+            background-color: #3498db;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .social-icons a:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
@@ -195,9 +214,17 @@
 <div class="modal" id="shareModal">
     <div class="modal-content">
         <span onclick="closeModal()" class="close-btn">&times;</span>
-        <p>Share this link with others:</p>
+        <p>Share this video:</p>
         <input type="text" id="shareLinkInput" readonly>
-        <button class="copy-btn" id="copyBtn">Copy</button>
+        <button class="copy-btn" id="copyBtn">Copy Link</button>
+        <div class="social-share">
+            <p>Share via:</p>
+            <div class="social-icons">
+                <a href="#" onclick="shareOnFacebook()">Facebook</a>
+                <a href="#" onclick="shareOnTwitter()">Twitter</a>
+                <a href="#" onclick="shareOnLinkedIn()">LinkedIn</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -252,9 +279,9 @@
     function displayMessage(message) {
         const messageContainer = document.getElementById('messageContainer');
         messageContainer.textContent = message;
-        messageContainer.classList.add('show'); // Show the message
+        messageContainer.classList.add('show');
         setTimeout(() => {
-            messageContainer.classList.remove('show'); // Hide the message after 3 seconds
+            messageContainer.classList.remove('show');
         }, 3000);
     }
 
@@ -273,7 +300,7 @@
             copyToClipboard(linkInput);
             copyBtn.textContent = 'Copied!';
             setTimeout(() => {
-                copyBtn.textContent = 'Copy';
+                copyBtn.textContent = 'Copy Link';
             }, 2000);
         };
     }
@@ -294,6 +321,27 @@
     function closeModal() {
         const modal = document.getElementById('shareModal');
         modal.style.display = 'none';
+    }
+
+    // Function to share video link on Facebook
+    function shareOnFacebook() {
+        const videoUrl = document.getElementById('shareLinkInput').value;
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
+        window.open(facebookUrl, '_blank');
+    }
+
+    // Function to share video link on Twitter
+    function shareOnTwitter() {
+        const videoUrl = document.getElementById('shareLinkInput').value;
+        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(videoUrl)}`;
+        window.open(twitterUrl, '_blank');
+    }
+
+    // Function to share video link on LinkedIn
+    function shareOnLinkedIn() {
+        const videoUrl = document.getElementById('shareLinkInput').value;
+        const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(videoUrl)}`;
+        window.open(linkedInUrl, '_blank');
     }
 </script>
 
