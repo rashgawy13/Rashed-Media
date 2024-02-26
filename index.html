@@ -3,125 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Sharing Center</title>
+    <title>Public Video Sharing Center</title>
     <style>
-        /* CSS styles here */
-        /* CSS styles here */
+        /* CSS styles for the video sharing center */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
         }
 
-        header {
-            text-align: center;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #3498db;
-            width: 100%;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            margin: 0;
-            font-size: 2em;
-            color: #ecf0f1;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .message-container {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            z-index: 999;
+        #videoInput {
             display: none;
         }
 
-        .message-container.show {
-            display: block;
+        label.upload-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .media-container {
+        label.upload-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .video-list {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            margin: 20px;
         }
 
-        .media-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.2s ease-in-out;
-            max-width: 300px; /* Adjust the maximum width */
+        .video-item {
+            max-width: 300px;
         }
 
-        video {
-            max-width: 100%; /* Make video responsive */
-            height: auto;
-            cursor: pointer;
-            background-color: #f5f5f5;
-            object-fit: cover;
-            max-height: 300px; /* Adjust the maximum height */
+        .video-item video {
+            width: 100%;
+            border-radius: 5px;
         }
 
-        .media-wrapper:hover {
-            transform: scale(1.05);
-        }
-
-        .share-btn,
-        .copy-btn,
-        #fileInput {
-            padding: 10px;
-            font-size: 14px;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
+        .share-btn {
+            display: block;
+            padding: 8px 16px;
             margin-top: 10px;
-            border: none;
-            border-radius: 5px;
             background-color: #3498db;
-        }
-
-        .share-btn:hover,
-        .copy-btn:hover,
-        #fileInput:hover {
-            background-color: #2980b9;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        label {
-            padding: 10px;
-            font-size: 14px;
             color: #fff;
-            background-color: #3498db;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-            margin-top: 20px;
-            display: inline-block;
+            transition: background-color 0.3s ease;
+            text-align: center;
         }
 
-        label:hover {
+        .share-btn:hover {
             background-color: #2980b9;
         }
 
@@ -164,123 +114,85 @@
     </style>
 </head>
 <body>
-
-<header>
-    <h1>Video Sharing Center</h1>
-</header>
-
-<div class="message-container" id="messageContainer"></div>
-
-<div class="media-container"></div>
-
-<label for="fileInput" class="custom-upload">Upload Video</label>
-<input type="file" id="fileInput" accept="video/*" onchange="handleFileInput(this)" multiple>
-
-<!-- Modal for sharing video link -->
-<div class="modal" id="shareModal">
-    <div class="modal-content">
-        <span onclick="closeModal()" class="close-btn">&times;</span>
-        <p>Share this video:</p>
-        <input type="text" id="shareLinkInput" readonly>
-        <button class="copy-btn" id="copyBtn">Copy Link</button>
+    <div class="container">
+        <h1>Public Video Sharing Center</h1>
+        <input type="file" id="videoInput" accept="video/*" onchange="handleFileUpload(event)" multiple>
+        <label for="videoInput" class="upload-btn">Upload Video</label>
+        <div class="video-list" id="videoList"></div>
     </div>
-</div>
 
-<script>
-    // JavaScript code here
-    function handleFileInput(input) {
-        const mediaContainer = document.querySelector('.media-container');
-        const messageContainer = document.getElementById('messageContainer');
+    <!-- Modal for sharing video link -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <span onclick="closeModal()" class="close-btn">&times;</span>
+            <p>Share this video:</p>
+            <input type="text" id="shareLinkInput" readonly>
+            <button class="share-btn" id="copyBtn" onclick="copyLink()">Copy Link</button>
+        </div>
+    </div>
 
-        const files = input.files;
-        let addedMedia = 0;
+    <script>
+        // JavaScript code for handling file uploads
+        function handleFileUpload(event) {
+            const files = event.target.files;
 
-        for (const file of files) {
-            const existingMedia = document.querySelector(`video[id="${file.name}"]`);
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const videoURL = URL.createObjectURL(file);
 
-            if (existingMedia) {
-                displayMessage(`Video '${file.name}' is a duplicate and will not be added.`);
-                continue;
+                const videoItem = document.createElement('div');
+                videoItem.classList.add('video-item');
+
+                const video = document.createElement('video');
+                video.controls = true;
+                video.src = videoURL;
+
+                const shareBtn = document.createElement('button');
+                shareBtn.classList.add('share-btn');
+                shareBtn.textContent = 'Share';
+                shareBtn.onclick = function () {
+                    shareVideoLink(videoURL);
+                };
+
+                videoItem.appendChild(video);
+                videoItem.appendChild(shareBtn);
+                document.getElementById('videoList').appendChild(videoItem);
             }
+        }
 
-            const mediaWrapper = document.createElement('div');
-            mediaWrapper.classList.add('media-wrapper');
+        function shareVideoLink(videoURL) {
+            const modal = document.getElementById('shareModal');
+            const linkInput = document.getElementById('shareLinkInput');
+            const copyBtn = document.getElementById('copyBtn');
 
-            const video = document.createElement('video');
-            video.controls = true;
-            video.preload = 'metadata';
-            video.id = generateUniqueId(); // Use unique ID instead of file name
+            linkInput.value = videoURL;
 
-            const source = document.createElement('source');
-            source.src = URL.createObjectURL(file);
-            source.type = file.type;
+            modal.style.display = 'flex';
 
-            video.appendChild(source);
-            mediaWrapper.appendChild(video);
-
-            const shareBtn = document.createElement('button');
-            shareBtn.classList.add('share-btn');
-            shareBtn.textContent = 'Share';
-            shareBtn.onclick = function () {
-                shareVideoLink(video.id); // Pass video ID
+            copyBtn.onclick = function () {
+                copyToClipboard(linkInput);
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy Link';
+                }, 2000);
             };
-
-            mediaWrapper.appendChild(shareBtn);
-            mediaContainer.appendChild(mediaWrapper);
-            addedMedia++;
         }
 
-        if (addedMedia > 0) {
-            displayMessage(`${addedMedia} video${addedMedia === 1 ? '' : 's'} added successfully.`);
+        function copyToClipboard(element) {
+            element.select();
+            document.execCommand('copy');
         }
-    }
 
-    function displayMessage(message) {
-        const messageContainer = document.getElementById('messageContainer');
-        messageContainer.textContent = message;
-        messageContainer.classList.add('show');
-        setTimeout(() => {
-            messageContainer.classList.remove('show');
-        }, 3000);
-    }
+        function closeModal() {
+            const modal = document.getElementById('shareModal');
+            modal.style.display = 'none';
+        }
 
-    function shareVideoLink(videoId) {
-        const modal = document.getElementById('shareModal');
-        const linkInput = document.getElementById('shareLinkInput');
-        const copyBtn = document.getElementById('copyBtn');
-
-        const videoUrl = `https://rashgawy13.github.io/Rashed-Media/${videoId}`; // Replace with your actual domain
-        linkInput.value = videoUrl;
-
-        modal.style.display = 'flex';
-
-        copyBtn.onclick = function () {
+        function copyLink() {
+            const linkInput = document.getElementById('shareLinkInput');
             copyToClipboard(linkInput);
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy Link';
-            }, 2000);
-        };
-    }
-
-    function generateUniqueId() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    function copyToClipboard(element) {
-        element.select();
-        document.execCommand('copy');
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('shareModal');
-        modal.style.display = 'none';
-    }
-</script>
-
+            alert('Link copied to clipboard!');
+        }
+    </script>
 </body>
 </html>
