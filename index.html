@@ -31,6 +31,24 @@
             color: #ecf0f1;
         }
 
+        .message-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            z-index: 999;
+            display: none;
+        }
+
+        .message-container.show {
+            display: block;
+        }
+
         .media-container {
             display: flex;
             flex-wrap: wrap;
@@ -64,16 +82,20 @@
             transform: scale(1.05);
         }
 
-        .share-btn {
+        .share-btn,
+        .copy-btn {
             padding: 10px;
             font-size: 14px;
             color: #fff;
-            background-color: #27ae60;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease-in-out;
             margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .share-btn {
+            background-color: #27ae60;
         }
 
         .share-btn:hover {
@@ -81,59 +103,13 @@
         }
 
         .copy-btn {
-            padding: 10px;
-            font-size: 14px;
-            color: #fff;
             background-color: #3498db;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-            margin-top: 10px;
         }
 
         .copy-btn:hover {
             background-color: #2980b9;
         }
 
-        .message-container {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            z-index: 999;
-            display: none;
-        }
-
-        .message-container.show {
-            display: block;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        label {
-            background-color: #3498db;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: inline-block;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        label:hover {
-            background-color: #2980b9;
-        }
-
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -170,7 +146,6 @@
             background-color: #c0392b;
         }
 
-        /* Social media sharing styles */
         .social-share {
             margin-top: 20px;
         }
@@ -237,7 +212,7 @@
         let addedMedia = 0;
 
         for (const file of files) {
-            const existingMedia = document.querySelector(`video[source="${file.name}"]`);
+            const existingMedia = document.querySelector(`video[id="${file.name}"]`);
 
             if (existingMedia) {
                 displayMessage(`Video '${file.name}' is a duplicate and will not be added.`);
@@ -250,7 +225,7 @@
             const video = document.createElement('video');
             video.controls = true;
             video.preload = 'metadata';
-            video.setAttribute('source', file.name);
+            video.id = file.name;
 
             const source = document.createElement('source');
             source.src = URL.createObjectURL(file);
@@ -285,13 +260,13 @@
         }, 3000);
     }
 
-    function shareVideoLink(videoFilename) {
+    function shareVideoLink(videoId) {
         const modal = document.getElementById('shareModal');
         const linkInput = document.getElementById('shareLinkInput');
         const copyBtn = document.getElementById('copyBtn');
 
         const uniqueId = generateUniqueId();
-        const videoUrl = `https://rashgawy13.github.io/Rashed-Media/videos/${videoFilename}?id=${uniqueId}`;
+        const videoUrl = `https://rashgawy13.github.io/Rashed-Media/videos/${videoId}?id=${uniqueId}`;
         linkInput.value = videoUrl;
 
         modal.style.display = 'flex';
