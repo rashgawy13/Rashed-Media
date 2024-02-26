@@ -50,6 +50,7 @@
         }
 
         .video-item {
+            position: relative;
             max-width: 300px;
         }
 
@@ -58,7 +59,7 @@
             border-radius: 5px;
         }
 
-        .share-btn {
+        .share-btn, .delete-btn {
             display: block;
             padding: 8px 16px;
             margin-top: 10px;
@@ -71,8 +72,14 @@
             text-align: center;
         }
 
-        .share-btn:hover {
+        .share-btn:hover, .delete-btn:hover {
             background-color: #2980b9;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
         }
 
         /* Modal styles */
@@ -154,8 +161,16 @@
                     shareVideoLink(videoURL);
                 };
 
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = function () {
+                    deleteVideo(videoItem);
+                };
+
                 videoItem.appendChild(video);
                 videoItem.appendChild(shareBtn);
+                videoItem.appendChild(deleteBtn);
                 document.getElementById('videoList').appendChild(videoItem);
 
                 checkForDuplicates(file); // Check for duplicates
@@ -197,25 +212,15 @@
         }
 
         function checkForDuplicates(file) {
-            const reader = new FileReader();
-
-            reader.onload = function (event) {
-                const hash = generateHash(event.target.result);
-                console.log('File hash:', hash);
-                // Implement logic to check if hash already exists in your database or storage
-            };
-
-            reader.readAsArrayBuffer(file);
+            // Implementation of duplicate detection logic (compare file size or hash)
+            // Dummy implementation for demonstration
+            console.log('Checking for duplicates:', file.name);
         }
 
-        function generateHash(data) {
-            // Example hash generation (you might want to use a better algorithm)
-            let hash = 0;
-            for (let i = 0; i < data.length; i++) {
-                hash = (hash << 5) - hash + data.charCodeAt(i);
-                hash |= 0; // Convert to 32bit integer
-            }
-            return hash;
+        function deleteVideo(videoItem) {
+            videoItem.remove();
+            // Implement logic to delete the video from storage or database
+            // You may need to identify the video to delete (e.g., by file name or ID)
         }
     </script>
 </body>
