@@ -98,15 +98,20 @@
 
         .message-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #e74c3c;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
             color: #fff;
             text-align: center;
-            padding: 10px;
-            display: none;
+            border-radius: 5px;
             z-index: 999;
+            display: none;
+        }
+
+        .message-container.show {
+            display: block;
         }
 
         input[type="file"] {
@@ -164,6 +169,13 @@
         .close-btn:hover {
             background-color: #c0392b;
         }
+
+        /* Add responsiveness */
+        @media only screen and (max-width: 600px) {
+            .media-wrapper {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -179,6 +191,16 @@
 <label for="fileInput">Upload Video</label>
 <input type="file" id="fileInput" accept="video/*" onchange="handleFileInput(this)" multiple>
 
+<!-- Modal for sharing video link -->
+<div class="modal" id="shareModal">
+    <div class="modal-content">
+        <span onclick="closeModal()" class="close-btn">&times;</span>
+        <p>Share this link with others:</p>
+        <input type="text" id="shareLinkInput" readonly>
+        <button class="copy-btn" id="copyBtn">Copy</button>
+    </div>
+</div>
+
 <script>
     function handleFileInput(input) {
         const mediaContainer = document.querySelector('.media-container');
@@ -188,12 +210,11 @@
         let addedMedia = 0;
 
         for (const file of files) {
-            // Check if the media with the same name already exists
             const existingMedia = document.querySelector(`video[source="${file.name}"]`);
 
             if (existingMedia) {
                 displayMessage(`Video '${file.name}' is a duplicate and will not be added.`);
-                continue; // Skip adding the duplicate media
+                continue;
             }
 
             const mediaWrapper = document.createElement('div');
@@ -231,10 +252,10 @@
     function displayMessage(message) {
         const messageContainer = document.getElementById('messageContainer');
         messageContainer.textContent = message;
-        messageContainer.style.display = 'block';
+        messageContainer.classList.add('show'); // Show the message
         setTimeout(() => {
-            messageContainer.style.display = 'none';
-        }, 3000); // Display for 3 seconds
+            messageContainer.classList.remove('show'); // Hide the message after 3 seconds
+        }, 3000);
     }
 
     function shareVideoLink(videoFilename) {
@@ -242,26 +263,22 @@
         const linkInput = document.getElementById('shareLinkInput');
         const copyBtn = document.getElementById('copyBtn');
 
-        // Generate a unique identifier for each video
         const uniqueId = generateUniqueId();
         const videoUrl = `https://rashgawy13.github.io/Rashed-Media/videos/${videoFilename}?id=${uniqueId}`;
         linkInput.value = videoUrl;
 
-        // Show the modal
         modal.style.display = 'flex';
 
-        // Event listener for the "Copy" button
         copyBtn.onclick = function () {
             copyToClipboard(linkInput);
             copyBtn.textContent = 'Copied!';
             setTimeout(() => {
                 copyBtn.textContent = 'Copy';
-            }, 2000); // Reset the button text after 2 seconds
+            }, 2000);
         };
     }
 
     function generateUniqueId() {
-        // Function to generate a unique identifier
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             const r = Math.random() * 16 | 0;
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -270,7 +287,6 @@
     }
 
     function copyToClipboard(element) {
-        // Function to copy text to clipboard
         element.select();
         document.execCommand('copy');
     }
@@ -280,16 +296,6 @@
         modal.style.display = 'none';
     }
 </script>
-
-<!-- Modal for sharing video link -->
-<div class="modal" id="shareModal">
-    <div class="modal-content">
-        <span onclick="closeModal()" class="close-btn">&times;</span>
-        <p>Share this link with others:</p>
-        <input type="text" id="shareLinkInput" readonly>
-        <button class="copy-btn" id="copyBtn">Copy</button>
-    </div>
-</div>
 
 </body>
 </html>
