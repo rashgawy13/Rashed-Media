@@ -124,6 +124,23 @@
             background-color: #2980b9;
         }
 
+        /* Style for upload button */
+        .custom-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .custom-upload:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -171,7 +188,7 @@
 
 <div class="media-container"></div>
 
-<label for="fileInput">Upload Video</label>
+<label for="fileInput" class="custom-upload">Upload Video</label>
 <input type="file" id="fileInput" accept="video/*" onchange="handleFileInput(this)" multiple>
 
 <!-- Modal for sharing video link -->
