@@ -157,6 +157,8 @@
                 videoItem.appendChild(video);
                 videoItem.appendChild(shareBtn);
                 document.getElementById('videoList').appendChild(videoItem);
+
+                checkForDuplicates(file); // Check for duplicates
             }
         }
 
@@ -192,6 +194,28 @@
             const linkInput = document.getElementById('shareLinkInput');
             copyToClipboard(linkInput);
             alert('Link copied to clipboard!');
+        }
+
+        function checkForDuplicates(file) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const hash = generateHash(event.target.result);
+                console.log('File hash:', hash);
+                // Implement logic to check if hash already exists in your database or storage
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function generateHash(data) {
+            // Example hash generation (you might want to use a better algorithm)
+            let hash = 0;
+            for (let i = 0; i < data.length; i++) {
+                hash = (hash << 5) - hash + data.charCodeAt(i);
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
         }
     </script>
 </body>
