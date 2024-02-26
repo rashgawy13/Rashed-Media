@@ -84,7 +84,8 @@
         }
 
         .share-btn,
-        .copy-btn {
+        .copy-btn,
+        #fileInput {
             padding: 10px;
             font-size: 14px;
             color: #fff;
@@ -93,21 +94,33 @@
             margin-top: 10px;
             border: none;
             border-radius: 5px;
-        }
-
-        .share-btn {
-            background-color: #27ae60;
-        }
-
-        .share-btn:hover {
-            background-color: #219a52;
-        }
-
-        .copy-btn {
             background-color: #3498db;
         }
 
-        .copy-btn:hover {
+        .share-btn:hover,
+        .copy-btn:hover,
+        #fileInput:hover {
+            background-color: #2980b9;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        label {
+            padding: 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        label:hover {
             background-color: #2980b9;
         }
 
