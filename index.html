@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Sharing Center</title>
     <style>
+        /* CSS styles here */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f0f0;
@@ -145,31 +146,6 @@
         .close-btn:hover {
             background-color: #c0392b;
         }
-
-        .social-share {
-            margin-top: 20px;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .social-icons a {
-            display: inline-block;
-            margin: 0 5px;
-            padding: 8px 12px;
-            color: #fff;
-            background-color: #3498db;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .social-icons a:hover {
-            background-color: #2980b9;
-        }
     </style>
 </head>
 <body>
@@ -192,18 +168,11 @@
         <p>Share this video:</p>
         <input type="text" id="shareLinkInput" readonly>
         <button class="copy-btn" id="copyBtn">Copy Link</button>
-        <div class="social-share">
-            <p>Share via:</p>
-            <div class="social-icons">
-                <a href="#" onclick="shareOnFacebook()">Facebook</a>
-                <a href="#" onclick="shareOnTwitter()">Twitter</a>
-                <a href="#" onclick="shareOnLinkedIn()">LinkedIn</a>
-            </div>
-        </div>
     </div>
 </div>
 
 <script>
+    // JavaScript code here
     function handleFileInput(input) {
         const mediaContainer = document.querySelector('.media-container');
         const messageContainer = document.getElementById('messageContainer');
@@ -296,27 +265,6 @@
     function closeModal() {
         const modal = document.getElementById('shareModal');
         modal.style.display = 'none';
-    }
-
-    // Function to share video link on Facebook
-    function shareOnFacebook() {
-        const videoUrl = document.getElementById('shareLinkInput').value;
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
-        window.open(facebookUrl, '_blank');
-    }
-
-    // Function to share video link on Twitter
-    function shareOnTwitter() {
-        const videoUrl = document.getElementById('shareLinkInput').value;
-        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(videoUrl)}`;
-        window.open(twitterUrl, '_blank');
-    }
-
-    // Function to share video link on LinkedIn
-    function shareOnLinkedIn() {
-        const videoUrl = document.getElementById('shareLinkInput').value;
-        const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(videoUrl)}`;
-        window.open(linkedInUrl, '_blank');
     }
 </script>
 
