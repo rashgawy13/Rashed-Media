@@ -6,6 +6,7 @@
     <title>Video Sharing Center</title>
     <style>
         /* CSS styles here */
+        /* CSS styles here */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f0f0;
@@ -124,22 +125,6 @@
             background-color: #2980b9;
         }
 
-        /* Style for upload button */
-        .custom-upload {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-            margin-top: 20px;
-        }
-
-        .custom-upload:hover {
-            background-color: #2980b9;
-        }
-
         /* Modal styles */
         .modal {
             display: none;
@@ -224,7 +209,7 @@
             const video = document.createElement('video');
             video.controls = true;
             video.preload = 'metadata';
-            video.id = file.name;
+            video.id = generateUniqueId(); // Use unique ID instead of file name
 
             const source = document.createElement('source');
             source.src = URL.createObjectURL(file);
@@ -237,7 +222,7 @@
             shareBtn.classList.add('share-btn');
             shareBtn.textContent = 'Share';
             shareBtn.onclick = function () {
-                shareVideoLink(file.name);
+                shareVideoLink(video.id); // Pass video ID
             };
 
             mediaWrapper.appendChild(shareBtn);
@@ -264,8 +249,7 @@
         const linkInput = document.getElementById('shareLinkInput');
         const copyBtn = document.getElementById('copyBtn');
 
-        const uniqueId = generateUniqueId();
-        const videoUrl = `https://rashgawy13.github.io/Rashed-Media/videos/${videoId}?id=${uniqueId}`;
+        const videoUrl = `https://rashgawy13.github.io/Rashed-Media/videos/${videoId}`; // Replace with your actual domain
         linkInput.value = videoUrl;
 
         modal.style.display = 'flex';
